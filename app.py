@@ -40,7 +40,9 @@ def login():
         contra = request.form['contra']
 
         # Conectar a la base de datos
-        db = conectar_db()
+       
+        uri = "mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso"
+        db = conectar_db(uri)
         user = db.IniciarSesion.find_one({'correo': usuario})
 
         # Verificar si el usuario existe y si la contraseña es correcta
