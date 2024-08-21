@@ -10,12 +10,11 @@ app.secret_key = 'alex123'
 # Conectar a la base de datos
 def conectar_db():
     try:
-        client = MongoClient("mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso")
+        client = MongoClient("mongodb+srv://badjuan453:Badillo12@cluster0.roexaww.mongodb.net/ProyectoCaso")
         client.list_database_names()  # Solo para verificar la conexión
         return client['ProyectoCaso']
     except PyMongoError as e:
         raise RuntimeError(f"Error de conexión a la base de datos: {str(e)}")
-
 # Ruta principal
 @app.route('/')
 def index():
@@ -41,9 +40,9 @@ def login():
 
         try:
             db = conectar_db()
-            user = db.IniciarSesion.find_one({'correo': usuario})
+            user = db.IniciarSesion.find_one({'usuario': usuario})
 
-            if user and user['contra'] == contra:
+            if user and user.get('contra') == contra:
                 session['user_id'] = str(user['_id'])
                 return redirect(url_for('modificables'))
             else:
