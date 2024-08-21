@@ -10,13 +10,11 @@ app.secret_key = 'alex123'
 # Conectar a la base de datos
 def conectar_db():
     try:
-        mongo_uri = os.getenv('MONGODB_URI')
-        client = MongoClient(mongo_uri)
+        client = MongoClient("mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso")
         client.list_database_names()  # Solo para verificar la conexión
         return client['ProyectoCaso']
     except PyMongoError as e:
         raise RuntimeError(f"Error de conexión a la base de datos: {str(e)}")
-
 
 # Ruta principal
 @app.route('/')
