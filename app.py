@@ -3,15 +3,14 @@ from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
 
-app = Flask(__name__, static_folder="static")
+app= Flask(__name__, static_folder="static")
 app.secret_key = 'alex123'
 
 
 # Conectar a la base de datos
 def conectar_db():
-    uri = "mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso"
     try:
-        client = MongoClient(uri)
+        client = MongoClient("mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso")
         client.list_database_names()
         return client['ProyectoCaso']
     except PyMongoError as e:
@@ -40,9 +39,7 @@ def login():
         contra = request.form['contra']
 
         # Conectar a la base de datos
-       
-        uri = "mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso"
-        db = conectar_db(uri)
+        db = conectar_db()
         user = db.IniciarSesion.find_one({'correo': usuario})
 
         # Verificar si el usuario existe y si la contraseña es correcta
@@ -153,4 +150,4 @@ def eliminar_servidor():
         return jsonify({'message': 'No se encontró el servidor'})
 
 if __name__ == "__main__":
-   app.run(debug=True)
+    app.run(debug=True)
