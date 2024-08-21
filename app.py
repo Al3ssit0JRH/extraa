@@ -6,16 +6,15 @@ from pymongo.errors import PyMongoError
 app= Flask(__name__, static_folder="static")
 app.secret_key = 'alex123'
 
+
+# Conectar a la base de datos
 def conectar_db():
     try:
         client = MongoClient("mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso")
-        db = client.test_db
-        print("Conexión exitosa a MongoDB")
-        return db
-    except Exception as e:
-        print(f"Error al conectar con MongoDB: {e}")
-        raise
-
+        client.list_database_names()  # Solo para verificar la conexión
+        return client['ProyectoCaso']
+    except PyMongoError as e:
+        raise RuntimeError(f"Error de conexión a la base de datos: {str(e)}")
 # Ruta principal
 @app.route('/')
 def index():
@@ -32,25 +31,26 @@ def modificables():
 def InicioSesion():
     return render_template('iniciarsesion.html')
 
-@app.route('/login', methods=['GET','POST'])
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         usuario = request.form['usuario']
         contra = request.form['contra']
 
-        # Conectar a la base de datos
-        db = conectar_db()
-        user = db.IniciarSesion.find_one({'correo': usuario})
+        try:
+            db = conectar_db()
+            user = db.IniciarSesion.find_one({'correo': usuario})
 
-        # Verificar si el usuario existe y si la contraseña es correcta
-        if user and user['contra'] == contra:
-            session['user_id'] = str(user['_id'])
-            return redirect(url_for('modificables'))
-        else:
-            return "Login fallido. Por favor, verifica tu nombre de usuario y contraseña."
+            if user and user['contra'] == contra:
+                session['user_id'] = str(user['_id'])
+                return redirect(url_for('modificables'))
+            else:
+                return "Login fallido. Por favor, verifica tu nombre de usuario y contraseña."
+        except RuntimeError as e:
+            return str(e)  # Devuelve el mensaje de error como respuesta
 
     return render_template('iniciar_sesion.html')
-
 
 @app.route('/insertar_servidor', methods=['POST'])
 def insertar_servidor():
