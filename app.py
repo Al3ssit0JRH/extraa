@@ -10,7 +10,8 @@ app.secret_key = 'alex123'
 # Conectar a la base de datos
 def conectar_db():
     try:
-        client = MongoClient("mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso")
+        client = MongoClient("mongodb+srv://23301224:20301224@junior.52vo42c.mongodb.net/ProyectoCaso?retryWrites=true&w=majority")
+        
         client.list_database_names()  # Solo para verificar la conexión
         return client['ProyectoCaso']
     except PyMongoError as e:
